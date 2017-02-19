@@ -1,0 +1,11 @@
+{
+  "name": "learnrgl",
+  "version": "1.0.0",
+  "description": "A [re-frame](https://github.com/Day8/re-frame) application designed to ... well, that part is up to you.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
