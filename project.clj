@@ -32,7 +32,8 @@
                     :asset-path           "js/compiled/out"
                     :source-map-timestamp true
                     :preloads             [devtools.preload]
-                    :external-config      {:devtools/config {:features-to-install :all}}}}
+                    :external-config      {:devtools/config {:features-to-install :all}}
+                    :externs ["./externs/handsontable.ext.js" "./externs/highchart.ext.js"]}}
 
 
     {:id           "min"
