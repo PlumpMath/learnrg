@@ -32,7 +32,7 @@
     ret))
 
 (defn sampleTable-render [this]
-  [:div {:style {:min-width "400px" :max-width "800px" :margin "0 auto"}}])
+  [:div {:style {:height "100%" :width "100%" :position "relative"}}])
 
 (defn sampleTable-did-mount [this]
   (let [[_ tableconfig] (reagent/argv this)
@@ -45,7 +45,7 @@
                          :component-did-mount sampleTable-did-mount}))
 
 (defn sampleHighchart-render []
-  [:div {:style {:min-width "400px" :max-width "800px" :margin "0 auto"}}])
+  [:div  {:style {:height "100%" :width "100%" :position "relative"}}])
 
 (defn sampleHighchart-did-mount [this]
   (let [[_ tableconfig gsoption] (reagent/argv this)
@@ -68,18 +68,20 @@
 
 (def layout
   [
-   {:i "a" :x 0 :y 0 :w 4 :h 8 :minW 4 :maxw 8 :minHeight 8}
-   {:i "b" :x 1 :y 0 :w 4 :h 8 :minW 4 :maxW 8}
-   {:i "c" :x 4 :y 0 :w 4 :h 8 :minW 4 :maxw 8}])
+   {:i "a" :x 0 :y 0 :w 4 :h 4}
+   {:i "b" :x 4 :y 0 :w 8 :h 8}
+   {:i "c" :x 8 :y 0 :w 4 :h 4}])
 
-(def ReactGridLayout (reagent/adapt-react-class (aget js/window "deps" "rgl")))
+(def RGL (aget js/window "deps" "rgl"))
+(def ReactGridLayout (reagent/adapt-react-class RGL))
 
 (defn mylayout [tableconfig]
   [ReactGridLayout {:class "layout"
                     :layout layout
                     :cols 12
                     :rowHeight 30
-                    :width 1200}
+                    :width 1200
+                    :isResizable "true"}
    [:div {:key "a" } "a"
     [sampleTable tableconfig]]
    [:div {:key "b" } "b"
