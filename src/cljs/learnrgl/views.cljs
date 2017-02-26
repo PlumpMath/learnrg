@@ -74,6 +74,7 @@
 
 (def RGL (aget js/window "deps" "rgl"))
 (def ReactGridLayout (reagent/adapt-react-class RGL))
+(def ResponsiveReactGridLayout (reagent/adapt-react-class (RGL.WidthProvider RGL.Responsive)))
 
 (defn mylayout [tableconfig]
   [ReactGridLayout {:class "layout"
@@ -81,16 +82,32 @@
                     :cols 12
                     :rowHeight 30
                     :width 1200
-                    :isResizable "true"}
+                    :isResizable true
+                    :style {:background-color "lightgrey"}}
    [:div {:key "a" } "a"
     [sampleTable tableconfig]]
    [:div {:key "b" } "b"
     [sampleHighchart tableconfig]]
    [:div {:key "c" :style {:background-color "blue"}} "c"]])
 
+(defn mylayout1 [tableconfig]
+  [ResponsiveReactGridLayout {:class "layout"
+                              :layout layout
+                              :breakpoints {:lg 1200 :md 996 :sm 768 :xs 480 :xxs 0}
+                              :cols {:lg 12 :md 10 :sm 6 :xs 4 :xxs 2}
+                              :rows 10
+                              :isResizable true
+                              :style {:background-color "lightgrey"}}
+   [:div {:key "a" :style {:background-color "white"}}
+    [sampleTable tableconfig]]
+   [:div {:key "b"}
+     [sampleHighchart tableconfig]]
+   [:div {:key "c" :style {:background-color "blue"}} "c"]])
+
+
 (defn main-panel []
   (let [name (subscribe [:name])
         tableconfig (subscribe[:tableconfig])]
     (fn []
       [:div  "Hello from " @name
-       [mylayout @tableconfig]])))
+       [mylayout1 @tableconfig]])))

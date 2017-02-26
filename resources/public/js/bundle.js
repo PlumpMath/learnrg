@@ -24918,9 +24918,9 @@ var GridItem = function (_React$Component) {
     var newChild = _react2.default.cloneElement(child, {
       className: (0, _classnames2.default)('react-grid-item', child.props.className, this.props.className, {
         static: this.props.static,
-        resizing: this.state.resizing,
+        resizing: Boolean(this.state.resizing),
         'react-draggable': isDraggable,
-        'react-draggable-dragging': this.state.dragging,
+        'react-draggable-dragging': Boolean(this.state.dragging),
         cssTransforms: useCSSTransforms
       }),
       // We can set the width and height on the child, but unfortunately we can't set the position.
@@ -24958,25 +24958,25 @@ GridItem.propTypes = {
   h: _react.PropTypes.number.isRequired,
 
   // All optional
-  minW: function minW(props, propName, componentName) {
+  minW: function minW(props, propName) {
     var value = props[propName];
     if (typeof value !== 'number') return new Error('minWidth not Number');
     if (value > props.w || value > props.maxW) return new Error('minWidth larger than item width/maxWidth');
   },
 
-  maxW: function maxW(props, propName, componentName) {
+  maxW: function maxW(props, propName) {
     var value = props[propName];
     if (typeof value !== 'number') return new Error('maxWidth not Number');
     if (value < props.w || value < props.minW) return new Error('maxWidth smaller than item width/minWidth');
   },
 
-  minH: function minH(props, propName, componentName) {
+  minH: function minH(props, propName) {
     var value = props[propName];
     if (typeof value !== 'number') return new Error('minHeight not Number');
     if (value > props.h || value > props.maxH) return new Error('minHeight larger than item height/maxHeight');
   },
 
-  maxH: function maxH(props, propName, componentName) {
+  maxH: function maxH(props, propName) {
     var value = props[propName];
     if (typeof value !== 'number') return new Error('maxHeight not Number');
     if (value < props.h || value < props.minH) return new Error('maxHeight smaller than item height/minHeight');
