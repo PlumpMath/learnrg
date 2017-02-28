@@ -47,6 +47,9 @@
 (defn sampleHighchart-render []
   [:div  {:style {:height "100%" :width "100%" :position "relative"}}])
 
+;(defn sampleHighchart-render []
+;  [:div  {:style {:height 300 :width 300}}])
+
 (defn sampleHighchart-did-mount [this]
   (let [[_ tableconfig gsoption] (reagent/argv this)
         my-chart-config (gen-chart-config-handson tableconfig)]
@@ -66,43 +69,76 @@
                          :component-did-mount sampleHighchart-did-mount
                          :component-did-update sampleHighchart-did-update}))
 
-(def layout
-  [
-   {:i "a" :x 0 :y 0 :w 4 :h 4}
-   {:i "b" :x 4 :y 0 :w 8 :h 8}
-   {:i "c" :x 8 :y 0 :w 4 :h 4}])
-
 (def RGL (aget js/window "deps" "rgl"))
 (def ReactGridLayout (reagent/adapt-react-class RGL))
 (def ResponsiveReactGridLayout (reagent/adapt-react-class (RGL.WidthProvider RGL.Responsive)))
 
-(defn mylayout [tableconfig]
-  [ReactGridLayout {:class "layout"
-                    :layout layout
-                    :cols 12
-                    :rowHeight 30
-                    :width 1200
-                    :isResizable true
-                    :style {:background-color "lightgrey"}}
-   [:div {:key "a" } "a"
-    [sampleTable tableconfig]]
-   [:div {:key "b" } "b"
-    [sampleHighchart tableconfig]]
-   [:div {:key "c" :style {:background-color "blue"}} "c"]])
+(def layout
+  [
+   {:i "a" :x 0 :y 0 :w 2 :h 2}
+   {:i "b" :x 2 :y 0 :w 2 :h 2}
+   {:i "c" :x 4 :y 0 :w 2 :h 2}])
 
-(defn mylayout1 [tableconfig]
+;(defn mylayout [tableconfig]
+;  [ReactGridLayout {:class "layout"
+;                    :layout layout
+;                    :cols 12
+;                    :rowHeight 30
+;                    :width 1200
+;                    :isResizable true
+;                    :style {:background-color "lightgrey"}}
+;   [:div {:key "a" } "a"
+;    [sampleTable tableconfig]]
+;   [:div {:key "b" } "b"
+;    [sampleHighchart tableconfig]]
+;   [:div {:key "c" :style {:background-color "blue"}} "c"]])
+
+;; Example 0
+(defn generateHelper [i]
+  (let [y (+ (.ceil js/Math (* (rand) 4)) 1)]
+    {:i (str i)
+     :x (mod (* (rand-int 6) 2) 12)
+     :y (* (.floor js/Math (/ i 6.0)) y)
+     :w 2
+     :h y}))
+
+(defn generateLayout []
+  (mapv generateHelper (take 25 (range))))
+
+(defn generateDom [layout]
+  (for [item layout]
+    [:div {:key (:i item) :style {:background-color "green"}}]))
+
+(defn example0 []
+  [:div
+   [:button "Generate New Layout"]
+   ;[:div (str (generateLayout))]
+   ;[:div (str layout)]
+   ;[:div (str (generateDom (generateLayout)))]
+   [ResponsiveReactGridLayout {:class "layout"
+                               :layouts {:lg (generateLayout)}
+                               :breakpoints {:lg 1200 :md 996 :sm 768 :xs 480 :xxs 0}
+                               :cols {:lg 12 :md 10 :sm 6 :xs 4 :xxs 2}
+                               :measureBeforeMount false
+                               :style {:background-color "lightgrey"}}
+    [:div {:key "0" :style {:background-color "green"}}]
+    [:div {:key "1" :style {:background-color "green"}}]
+    [:div {:key "2" :style {:background-color "green"}}]]])
+
+
+(defn mylayout [tableconfig]
   [ResponsiveReactGridLayout {:class "layout"
-                              :layout layout
+                              :layouts {:lg (generateLayout)}
                               :breakpoints {:lg 1200 :md 996 :sm 768 :xs 480 :xxs 0}
                               :cols {:lg 12 :md 10 :sm 6 :xs 4 :xxs 2}
-                              :rows 10
+                              :currentBreakpoint "lg"
                               :isResizable true
                               :style {:background-color "lightgrey"}}
-   [:div {:key "a" :style {:background-color "white"}}
+   [:div {:key "0" :style {:background-color "white"}}
     [sampleTable tableconfig]]
-   [:div {:key "b"}
-     [sampleHighchart tableconfig]]
-   [:div {:key "c" :style {:background-color "blue"}} "c"]])
+   [:div {:key "1"}
+    [sampleHighchart tableconfig]]
+   [:div {:key "2" :style {:background-color "blue"}} "c"]])
 
 
 (defn main-panel []
@@ -110,4 +146,4 @@
         tableconfig (subscribe[:tableconfig])]
     (fn []
       [:div  "Hello from " @name
-       [mylayout1 @tableconfig]])))
+       [example0 @tableconfig]])))
